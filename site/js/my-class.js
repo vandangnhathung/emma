@@ -15,11 +15,18 @@ export class MySingleWebPage{
             item.setAttribute('data-index', index + 1);
         })
 
+        this.index = 0;
+
+        this.maxIndex = this.sliderItems.length - 1;
+        this.minIndex = 0;
+        this.direction = -1;
+
         this.loop = true;
 
         this.init();
 
-        this.nonActiveItemOnLeft = 0;
+        // select
+        // this.select(2);
 
         // buttons for navigation
         this.btnPrevious = document.querySelector('.button.prev');
@@ -27,85 +34,68 @@ export class MySingleWebPage{
         this.btnPrevious.addEventListener('click', () => this.handleClick("prev"));
         this.btnNext.addEventListener('click', () => this.handleClick("next"));
 
-        this.activeAreaWidth = 0;
+
         this.handleClick = (type = "prev") => {
-            // get active item after click
-            this.currentActiveItem = document.querySelector('.active');
-            // get non active item
-            this.sliderItemsNotActive = document.querySelectorAll('.slider-behind-items .slider-item:not(.active)');
-
-            if(type === "next" && this.currentActiveItem.nextElementSibling === null && this.loop){
-                this.sliderLoop("next");
-                console.log("loop");
-                return;
+            if(type === "next"){
+                this.next();
+            }else if(type === "prev"){
+                this.previous();
             }
-            if(type === "prev" && this.currentActiveItem.previousElementSibling === null && this.loop){
-                this.sliderLoop("prev");
-                console.log("loop");
-
-                return;
-            }
-
-            console.log("activeAreaWidth: ", this.activeAreaWidth)
-
-            this.sliderNavigation(this.currentActiveItem.previousElementSibling, this.currentActiveItem.nextElementSibling, type);
         }
 
     }
 
     init(){
+
         // active first item
-        this.sliderItems[0].classList.add('active');
+        this.select(0);
     }
 
-    sliderLoop(type){
 
+    next(){
+        let newIndex = this.index;
 
-        if(type === "next"){
-            const moveX = Math.abs(this.slider.getBoundingClientRect().left) + this.currentActiveItem.clientWidth;
-            this.sliderItemsNotActive.forEach(item => {
-                item.style.left = `${moveX}px`;
-            })
+        if(newIndex === this.maxIndex) newIndex = this.minIndex;
+        else newIndex++;
 
-            this.sliderNavigation(this.currentActiveItem.previousElementSibling, this.sliderItems[0], type, true);
-            this.currentActiveItem.style.left = `${moveX}px`;
-            this.currentActiveItem = this.sliderItems[0];
-        }else if(type === "prev"){
-            const moveX = Math.abs(this.slider.getBoundingClientRect().right) + this.currentActiveItem.clientWidth;
-            console.log("moveX: ", moveX, this.slider.getBoundingClientRect().left, this.currentActiveItem.clientWidth);
-            this.sliderItemsNotActive.forEach(item => {
-                item.style.left = `-${moveX}px`;
-            })
-
-            this.sliderNavigation(this.sliderItems[this.sliderItems.length - 1], this.currentActiveItem.nextElementSibling, type);
-            this.currentActiveItem.style.left = `-${moveX}px`;
-            this.currentActiveItem = this.sliderItems[this.sliderItems.length - 1];
-        }
+        this.select(newIndex, 1);
     }
 
-    sliderNavigation(previousElement, nextElement, type, isLoop = false){
-        if(type === "next"){
-            this.activeAreaWidth += nextElement.clientWidth;
+    previous(){
+        let newIndex = this.index;
 
-            this.addActiveClass(nextElement, this.sliderItems);
-            this.slider.style.transform = `translateX(-${this.activeAreaWidth}px)`;
+        if(newIndex === this.minIndex) newIndex = this.maxIndex;
+        else newIndex--;
 
-        }else if(type === "prev"){
-            //
-            // this.nonActiveItemOnLeft = this.activeAreaWidth - previousElement.clientWidth;
-            // // console.log("nonActiveItemOnLeft: ", this.nonActiveItemOnLeft)
-            //
-            // this.activeAreaWidth -= this.nonActiveItemOnLeft === 0 ? previousElement.clientWidth : this.nonActiveItemOnLeft;
+        this.select(newIndex, -1);
+    }
 
-            this.activeAreaWidth -= previousElement.clientWidth;
+    select(index = 0, direction){
+        if(index < this.minIndex || index > this.maxIndex) return;
+        if(index === this.index) return;
 
-            this.addActiveClass(previousElement, this.sliderItems);
-            this.slider.style.transform = `translateX(-${this.activeAreaWidth}px)`;
-        }
+        // determine direction
+        this.direction = direction;
+
+        if(index < this.index && !direction) this.direction = -1;
+        else if(index > this.index && !direction) this.direction = 1;
+
+        console.log(this.direction);
+
+        this.index = index;
+        // console.log(this.index);
+        this.addActiveClass(this.sliderItems[index], this.sliderItems);
+    }
+
+    hide(index){
+        const hideElement = this.sliderItems[index]
+    }
+
+    show(index){
+
     }
 
     addActiveClass(item, items){
-        console.log(item)
         items.forEach(item => item.classList.remove('active'));
         item.classList.add('active');
     }
