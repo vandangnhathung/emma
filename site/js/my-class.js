@@ -1,3 +1,5 @@
+import {gsap} from "gsap";
+
 export class MySingleWebPage{
     constructor(){
         // slider
@@ -27,10 +29,6 @@ export class MySingleWebPage{
         this.btnNext = document.querySelector('.button.next');
         this.btnPrevious.addEventListener('click', () => this.previous());
         this.btnNext.addEventListener('click', () => this.next());
-
-        // Store timeout IDs for clearing later
-        this.hideTimeoutId = null;
-        this.showTimeoutId = null;
     }
 
     init(){
@@ -70,7 +68,7 @@ export class MySingleWebPage{
         this.isRunning = true;
 
         // prevent the function from being clicked while the animation is running
-        this.animationTimeoutId = setTimeout(() => {
+        setTimeout(() => {
             this.isRunning = false;
         }, 1500);
 
@@ -93,30 +91,25 @@ export class MySingleWebPage{
     }
 
     hide(index, direction){
-        // Clear any existing timeout
-        if(this.hideTimeoutId) clearTimeout(this.hideTimeoutId);
-
-
-        this.sliderItems[index].style.transition = `none`;
-        this.sliderItems[index].style.transform = `translateX(0)`;
-
-        this.hideTimeoutId = setTimeout(() => {
-            this.sliderItems[index].style.transition = `all 1.5s linear`;
-            this.sliderItems[index].style.transform = `translateX(${direction * -1 * 100}%)`;
-        }, 100);
+        gsap.fromTo(this.sliderItems[index], {translateX: 0}, {
+            translateX: direction * -100 + '%',
+            duration: 1.5,
+            ease: "power2.inOut"
+        });
     }
 
     show(index, direction){
-        // Clear any existing timeout
-        if(this.showTimeoutId) clearTimeout(this.showTimeoutId);
+        // solution 1:
+        // gsap.set(this.sliderItems[index], {translateX: direction * 100 + '%'});
+        // gsap.to(this.sliderItems[index], {translateX: 0, duration: 1.5});
 
-        this.sliderItems[index].style.transition = `none`;
-        this.sliderItems[index].style.transform = `translateX(${direction * 100}%)`;
+        // solution 2:
+        gsap.fromTo(this.sliderItems[index], {translateX: direction * 100 + '%'}, {
+            translateX: 0,
+            duration: 1.5,
+            ease: "power2.inOut"
+        });
 
-        this.showTimeoutId = setTimeout(() => {
-            this.sliderItems[index].style.transition = `all 1.5s linear`;
-            this.sliderItems[index].style.transform = `translateX(0)`;
-        }, 100);
     }
 
     addActiveClass(item, items){
