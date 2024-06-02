@@ -1,6 +1,5 @@
 export class MySingleWebPage{
     constructor(){
-
         // slider
         this.slider = document.querySelector('.slider-behind-items');
 
@@ -10,44 +9,34 @@ export class MySingleWebPage{
         // add data-index to each item
         this.sliderItems.forEach((item, index) => {
             item.setAttribute('data-index', index + 1);
-        })
+        });
 
         this.index = 0;
-
         this.maxIndex = this.sliderItems.length - 1;
         this.minIndex = 0;
-        this.direction = -1;
+
+        // prevent the function from being clicked while the animation is running
+        this.isRunning = false;
 
         this.loop = true;
 
         this.init();
 
-        // select
-        // this.select(2);
-
         // buttons for navigation
         this.btnPrevious = document.querySelector('.button.prev');
         this.btnNext = document.querySelector('.button.next');
-        this.btnPrevious.addEventListener('click', () => this.handleClick("prev"));
-        this.btnNext.addEventListener('click', () => this.handleClick("next"));
+        this.btnPrevious.addEventListener('click', () => this.previous());
+        this.btnNext.addEventListener('click', () => this.next());
 
-
-        this.handleClick = (type = "prev") => {
-            if(type === "next"){
-                this.next();
-            }else if(type === "prev"){
-                this.previous();
-            }
-        }
-
+        // Store timeout IDs for clearing later
+        this.hideTimeoutId = null;
+        this.showTimeoutId = null;
     }
 
     init(){
-
         // active first item
         this.select(0);
     }
-
 
     next(){
         let newIndex = this.index;
@@ -68,8 +57,22 @@ export class MySingleWebPage{
     }
 
     select(index = 0, direction = this.getDirection(index)){
+        // Exit if an animation is currently running
+        if(this.isRunning) return;
+
+        // check if the index is out of range
         if(index < this.minIndex || index > this.maxIndex) return;
+
+        // check if the index is the same as the current index
         if(index === this.index) return;
+
+        // set the animation to running after the condition is met
+        this.isRunning = true;
+
+        // prevent the function from being clicked while the animation is running
+        this.animationTimeoutId = setTimeout(() => {
+            this.isRunning = false;
+        }, 1500);
 
         // hide the old index
         this.hide(this.index, direction);
@@ -90,29 +93,30 @@ export class MySingleWebPage{
     }
 
     hide(index, direction){
-        console.log("hide", index);
+        // Clear any existing timeout
+        if(this.hideTimeoutId) clearTimeout(this.hideTimeoutId);
+
+
         this.sliderItems[index].style.transition = `none`;
         this.sliderItems[index].style.transform = `translateX(0)`;
 
-        setTimeout(() => {
-            this.sliderItems[index].style.transition = `all 1s ease-in-out`;
+        this.hideTimeoutId = setTimeout(() => {
+            this.sliderItems[index].style.transition = `all 1.5s linear`;
             this.sliderItems[index].style.transform = `translateX(${direction * -1 * 100}%)`;
-        }, 10);
-        // this.sliderItems[index].style.transition = `all 1s ease-in-out`;
-        // this.sliderItems[index].style.transform = `translateX(${direction * -1 * 100}%)`;
+        }, 100);
     }
 
     show(index, direction){
-        console.log("show", index);
+        // Clear any existing timeout
+        if(this.showTimeoutId) clearTimeout(this.showTimeoutId);
+
         this.sliderItems[index].style.transition = `none`;
         this.sliderItems[index].style.transform = `translateX(${direction * 100}%)`;
 
-        setTimeout(() => {
-            this.sliderItems[index].style.transition = `all 1s ease-in-out`;
+        this.showTimeoutId = setTimeout(() => {
+            this.sliderItems[index].style.transition = `all 1.5s linear`;
             this.sliderItems[index].style.transform = `translateX(0)`;
-        }, 10);
-        // this.sliderItems[index].style.transition = `all 1s ease-in-out`;
-        // this.sliderItems[index].style.transform = `translateX(0)`;
+        }, 100);
     }
 
     addActiveClass(item, items){
