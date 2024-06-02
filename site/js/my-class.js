@@ -7,9 +7,6 @@ export class MySingleWebPage{
         // get all items
         this.sliderItems = document.querySelectorAll('.slider-behind-items .slider-item');
 
-        // set total items variable in css
-        this.slider.style.setProperty('--total-items', this.sliderItems.length);
-
         // add data-index to each item
         this.sliderItems.forEach((item, index) => {
             item.setAttribute('data-index', index + 1);
@@ -70,29 +67,52 @@ export class MySingleWebPage{
         this.select(newIndex, -1);
     }
 
-    select(index = 0, direction){
+    select(index = 0, direction = this.getDirection(index)){
         if(index < this.minIndex || index > this.maxIndex) return;
         if(index === this.index) return;
 
-        // determine direction
-        this.direction = direction;
+        // hide the old index
+        this.hide(this.index, direction);
 
-        if(index < this.index && !direction) this.direction = -1;
-        else if(index > this.index && !direction) this.direction = 1;
-
-        console.log(this.direction);
-
+        // update new index
         this.index = index;
-        // console.log(this.index);
+
+        // add active class for new index
         this.addActiveClass(this.sliderItems[index], this.sliderItems);
+
+        // show the new index
+        this.show(this.index, direction);
     }
 
-    hide(index){
-        const hideElement = this.sliderItems[index]
+    getDirection(index){
+        if(index < this.index) return -1;
+        else if(index > this.index) return 1;
     }
 
-    show(index){
+    hide(index, direction){
+        console.log("hide", index);
+        this.sliderItems[index].style.transition = `none`;
+        this.sliderItems[index].style.transform = `translateX(0)`;
 
+        setTimeout(() => {
+            this.sliderItems[index].style.transition = `all 1s ease-in-out`;
+            this.sliderItems[index].style.transform = `translateX(${direction * -1 * 100}%)`;
+        }, 10);
+        // this.sliderItems[index].style.transition = `all 1s ease-in-out`;
+        // this.sliderItems[index].style.transform = `translateX(${direction * -1 * 100}%)`;
+    }
+
+    show(index, direction){
+        console.log("show", index);
+        this.sliderItems[index].style.transition = `none`;
+        this.sliderItems[index].style.transform = `translateX(${direction * 100}%)`;
+
+        setTimeout(() => {
+            this.sliderItems[index].style.transition = `all 1s ease-in-out`;
+            this.sliderItems[index].style.transform = `translateX(0)`;
+        }, 10);
+        // this.sliderItems[index].style.transition = `all 1s ease-in-out`;
+        // this.sliderItems[index].style.transform = `translateX(0)`;
     }
 
     addActiveClass(item, items){

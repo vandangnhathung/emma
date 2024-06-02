@@ -8,5 +8,7 @@
     height:100vh; width:100vw;
 }
 
-.slider-behind-items {display:flex; width:calc(var(--total-items) * 100vw); transition:all 1s ease-in-out; background:red; position:relative;}
-.slider-item {width:100vw; position:relative;}
+.slider-behind-items {width:100vw; transition:all 1s ease-in-out; background:red; position:relative;}
+.slider-item {width:100vw; position:absolute; top:0;}
+.slider-item:first-child {transform:translateX(0); z-index:99;}
+.slider-item:not(:first-child) {transform:translateX(100%);}
