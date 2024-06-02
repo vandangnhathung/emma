@@ -1,6 +1,7 @@
 /* Stylesheet */
 @import "fonts";
 @import "variables";
+@import "../index.css";
 
 * {
   box-sizing: border-box;
@@ -15,9 +16,36 @@ body {
   line-height: 1.7;
 }
 
-.container {
-  max-width: $page-width;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 20px;
+//
+//.container {
+//  max-width: $page-width;
+//  margin-left: auto;
+//  margin-right: auto;
+//  padding: 0 20px;
+//}
+
+.button {
+  --btn-position-x: 5%;
+  width: 50px;
+  aspect-ratio: 1;
+  font-size: 24px;
+  line-height: 1;
+  background: #ccc;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.button.prev {
+  left: var(--btn-position-x);
+}
+
+.button.next {
+  right: var(--btn-position-x);
 }

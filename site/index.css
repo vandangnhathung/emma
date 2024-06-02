@@ -1,0 +1,12 @@
+
+[class*="slider-"] {
+    height:100%; width:100%;
+}
+
+.slider-wrapper {
+    --total-items:0;
+    height:100vh; width:100vw;
+}
+
+.slider-behind-items {display:flex; width:calc(var(--total-items) * 100vw); transition:all 1s ease-in-out; background:red; position:relative;}
+.slider-item {width:100vw; position:relative;}

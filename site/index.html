@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="ie=edge" http-equiv="x-ua-compatible"/>
 
     <title>My Single Web Page</title>
 </head>
@@ -11,9 +11,33 @@
 <body>
 <div class="container">
 
-    <h1>My Single Web Page</h1>
+    <div class="slider-wrapper ps-relative">
+        <div class="slider-fore-bg ps-absolute">
+            <div class="slider-fore-items">
+                <div class="slider-fore-item"></div>
+                <div class="slider-fore-item"></div>
+                <div class="slider-fore-item"></div>
+                <div class="slider-fore-item"></div>
+            </div>
+        </div>
 
-    <img src="public/images/favicon.png"/>
+        <div class="slider-bg ps-relative">
+            <div class="slider-behind-items">
+                <div class="slider-item img-wrapper-cover">
+                    <img alt="" src="./public/images/emma-1.webp">
+                </div>
+                <div class="slider-item img-wrapper-cover">
+                    <img alt="" src="./public/images/emma-2.webp">
+                </div>
+                <div class="slider-item img-wrapper-cover">
+                    <img alt="" src="./public/images/emma-3.webp">
+                </div>
+            </div>
+
+            <div class="button prev"><</div>
+            <div class="button next">></div>
+        </div>
+    </div>
 
 </div>
 </body>
